@@ -1,1 +1,84 @@
-Hello
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Operations Tracker</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Clinic Operations Tracker</h1>
+
+        <div class="toolbar">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search...">
+
+            <select id="cityFilter">
+                <option value="">All Cities</option>
+            </select>
+
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+            </select>
+
+            <select id="statusFilter">
+                <option value="">All Status</option>
+                <option>Pending</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+                <option>On Hold</option>
+            </select>
+
+            <button id="refreshBtn">
+                Refresh
+            </button>
+
+            <button id="saveBtn">
+                Save Changes
+            </button>
+
+        </div>
+
+        <div id="message"></div>
+
+        <table id="trackerTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>City</th>
+                    <th>City Head Name</th>
+                    <th>Clinic</th>
+                    <th>Category</th>
+                    <th>Notes</th>
+                    <th>Status</th>
+                    <th>ETA</th>
+                    <th>Additional Comments</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
