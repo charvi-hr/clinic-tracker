@@ -348,13 +348,13 @@ async function saveChanges() {
 
     }
 
-    const payload = {
+   const payload = {
 
-        action: "updateTasks",
+    action: "updateTasks",
 
-        updates: Array.from(changedRows.values())
+    tasks: Array.from(changedRows.values())
 
-    };
+};
 
     try {
 
