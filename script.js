@@ -354,32 +354,31 @@ async function saveChanges() {
 
         showLoading(true);
 
-        const response = await fetch(CONFIG.API_URL, {
+        const formData = new FormData();
 
-            method: "POST",
+formData.append("action", "updateTasks");
+formData.append("tasks", JSON.stringify(Array.from(changedRows.values())));
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+const response = await fetch(CONFIG.API_URL, {
+    method: "POST",
+    body: formData
+});
 
-            body: JSON.stringify(payload)
+const result = await response.json();
 
-        });
+if (result.success) {
 
-        const result = await response.json();
+    alert("Changes saved successfully.");
 
-        if (result.success) {
+    changedRows.clear();
 
-            alert("Changes saved successfully.");
+    loadData();
 
-            changedRows.clear();
+} else {
 
-            loadData();
+    alert(result.message || "Save failed.");
 
-        } else {
-
-            alert(result.message || "Save failed.");
-
+}
         }
 
     } catch (err) {
