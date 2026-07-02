@@ -1,74 +1,443 @@
-// ================================
+// ==============================
 // Clinic Operations Tracker
-// ================================
+// script.js
+// ==============================
 
-const API_URL = CONFIG.API_URL;
-
-let allTasks = [];
-let filteredTasks = [];
+let allData = [];
+let filteredData = [];
 let changedRows = new Map();
 
-const tableBody = document.querySelector("#trackerTable tbody");
-const searchInput = document.getElementById("searchInput");
-const cityFilter = document.getElementById("cityFilter");
-const categoryFilter = document.getElementById("categoryFilter");
-const statusFilter = document.getElementById("statusFilter");
-const saveBtn = document.getElementById("saveBtn");
-const refreshBtn = document.getElementById("refreshBtn");
-const message = document.getElementById("message");
+const STATUS_OPTIONS = [
+    "Pending",
+    "In Progress",
+    "Completed",
+    "On Hold"
+];
 
 document.addEventListener("DOMContentLoaded", () => {
     loadData();
 
-    searchInput.addEventListener("input", applyFilters);
-    cityFilter.addEventListener("change", applyFilters);
-    categoryFilter.addEventListener("change", applyFilters);
-    statusFilter.addEventListener("change", applyFilters);
+    document
+        .getElementById("searchInput")
+        .addEventListener("input", applyFilters);
 
-    saveBtn.addEventListener("click", saveChanges);
-    refreshBtn.addEventListener("click", loadData);
+    document
+        .getElementById("cityFilter")
+        .addEventListener("change", applyFilters);
+
+    document
+        .getElementById("categoryFilter")
+        .addEventListener("change", applyFilters);
+
+    document
+        .getElementById("statusFilter")
+        .addEventListener("change", applyFilters);
+
+    document
+        .getElementById("refreshBtn")
+        .addEventListener("click", loadData);
+
+    document
+        .getElementById("saveBtn")
+        .addEventListener("click", saveChanges);
 });
-async function loadData() {
 
-    message.textContent = "Loading...";
+
+// ==========================================
+// LOAD DATA
+// ==========================================
+async function loadData() {
 
     try {
 
-        const response = await fetch(API_URL);
-        allTasks = await response.json();
+        showLoading(true);
+
+        changedRows.clear();
+
+        const response = await fetch(CONFIG.API_URL);
+
+        const data = await response.json();
+
+        allData = Array.isArray(data) ? data : [];
 
         populateFilters();
 
-        filteredTasks = [...allTasks];
+        applyFilters();
 
-        renderTable(filteredTasks);
+    } catch (err) {
 
-        message.textContent = "";
+        console.error(err);
+        alert("Unable to load data.");
+
+    } finally {
+
+        showLoading(false);
+
+    }
+
+}
+
+
+// ==========================================
+// POPULATE FILTERS
+// ==========================================
+function populateFilters() {
+
+    populateDropdown(
+        "cityFilter",
+        [...new Set(allData.map(r => r.City).filter(Boolean))]
+    );
+
+    populateDropdown(
+        "categoryFilter",
+        [...new Set(allData.map(r => r.Category).filter(Boolean))]
+    );
+
+    populateDropdown(
+        "statusFilter",
+        [...new Set(allData.map(r => r.Status).filter(Boolean))]
+    );
+
+}
+
+
+function populateDropdown(id, values) {
+
+    const dropdown = document.getElementById(id);
+
+    const current = dropdown.value;
+
+    dropdown.innerHTML = `<option value="">All</option>`;
+
+    values
+        .sort()
+        .forEach(v => {
+
+            const option = document.createElement("option");
+            option.value = v;
+            option.textContent = v;
+
+            dropdown.appendChild(option);
+
+        });
+
+    dropdown.value = current;
+
+}
+
+
+// ==========================================
+// SEARCH + FILTER
+// ==========================================
+function applyFilters() {
+
+    const search = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const city = document.getElementById("cityFilter").value;
+
+    const category = document.getElementById("categoryFilter").value;
+
+    const status = document.getElementById("statusFilter").value;
+
+    filteredData = allData.filter(row => {
+
+        const matchesSearch = Object.values(row)
+            .join(" ")
+            .toLowerCase()
+            .includes(search);
+
+        const matchesCity =
+            !city || row.City === city;
+
+        const matchesCategory =
+            !category || row.Category === category;
+
+        const matchesStatus =
+            !status || row.Status === status;
+
+        return (
+            matchesSearch &&
+            matchesCity &&
+            matchesCategory &&
+            matchesStatus
+        );
+
+    });
+
+    renderTable();
+
+}
+
+
+// ==========================================
+// TABLE
+// ==========================================
+function renderTable() {
+
+    const tbody = document.getElementById("tableBody");
+
+    tbody.innerHTML = "";
+
+    filteredData.forEach(row => {
+
+        const tr = document.createElement("tr");
+
+        tr.appendChild(createCell(row.City));
+        tr.appendChild(createCell(row["City Head Name"]));
+        tr.appendChild(createCell(row["City Head Email"]));
+        tr.appendChild(createCell(row.Clinic));
+        tr.appendChild(createCell(row.Category));
+        tr.appendChild(createCell(row.Notes));
+
+        tr.appendChild(createStatusCell(row));
+
+        tr.appendChild(createETACell(row));
+
+        tr.appendChild(createCommentCell(row));
+
+        tr.appendChild(createCell(row["Email Sent"]));
+        tr.appendChild(createCell(row["Email Status"]));
+        tr.appendChild(createCell(row["Reminder Sent"]));
+        tr.appendChild(createCell(row["Reminder Status"]));
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+
+// ==========================================
+// NORMAL CELL
+// ==========================================
+function createCell(value) {
+
+    const td = document.createElement("td");
+
+    td.textContent = value || "";
+
+    return td;
+
+}
+
+
+// ==========================================
+// STATUS
+// ==========================================
+function createStatusCell(row) {
+
+    const td = document.createElement("td");
+
+    const select = document.createElement("select");
+
+    STATUS_OPTIONS.forEach(status => {
+
+        const option = document.createElement("option");
+
+        option.value = status;
+        option.textContent = status;
+
+        if (status === row.Status) {
+            option.selected = true;
+        }
+
+        select.appendChild(option);
+
+    });
+
+    select.addEventListener("change", () => {
+
+        row.Status = select.value;
+
+        markChanged(row);
+
+    });
+
+    td.appendChild(select);
+
+    return td;
+
+}
+
+
+// ==========================================
+// ETA
+// ==========================================
+function createETACell(row) {
+
+    const td = document.createElement("td");
+
+    const input = document.createElement("input");
+
+    input.type = "date";
+
+    input.value = formatDate(row.ETA);
+
+    input.addEventListener("change", () => {
+
+        row.ETA = input.value;
+
+        markChanged(row);
+
+    });
+
+    td.appendChild(input);
+
+    return td;
+
+}
+
+
+// ==========================================
+// COMMENTS
+// ==========================================
+function createCommentCell(row) {
+
+    const td = document.createElement("td");
+
+    const textarea = document.createElement("textarea");
+
+    textarea.value = row["Additional Comments"] || "";
+
+    textarea.rows = 2;
+
+    textarea.addEventListener("input", () => {
+
+        row["Additional Comments"] = textarea.value;
+
+        markChanged(row);
+
+    });
+
+    td.appendChild(textarea);
+
+    return td;
+
+}
+
+
+// ==========================================
+// TRACK CHANGES
+// ==========================================
+function markChanged(row) {
+
+    changedRows.set(row.rowNumber, {
+        rowNumber: row.rowNumber,
+        Status: row.Status,
+        ETA: row.ETA,
+        "Additional Comments": row["Additional Comments"]
+    });
+
+}
+
+
+// ==========================================
+// SAVE
+// ==========================================
+async function saveChanges() {
+
+    if (changedRows.size === 0) {
+
+        alert("No changes to save.");
+
+        return;
+
+    }
+
+    const payload = {
+
+        action: "updateTasks",
+
+        updates: Array.from(changedRows.values())
+
+    };
+
+    try {
+
+        showLoading(true);
+
+        const response = await fetch(CONFIG.API_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(payload)
+
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            alert("Changes saved successfully.");
+
+            changedRows.clear();
+
+            loadData();
+
+        } else {
+
+            alert(result.message || "Save failed.");
+
+        }
 
     } catch (err) {
 
         console.error(err);
 
-        message.textContent = "Unable to load data.";
+        alert("Error saving data.");
 
-        message.className = "save-error";
+    } finally {
+
+        showLoading(false);
+
     }
 
 }
-function populateFilters() {
 
-    cityFilter.innerHTML = '<option value="">All Cities</option>';
-    categoryFilter.innerHTML = '<option value="">All Categories</option>';
 
-    const cities = [...new Set(allTasks.map(t => t.City))].sort();
-    const categories = [...new Set(allTasks.map(t => t.Category))].sort();
+// ==========================================
+// LOADING
+// ==========================================
+function showLoading(show) {
 
-    cities.forEach(city => {
-        cityFilter.innerHTML += `<option>${city}</option>`;
-    });
+    const loader = document.getElementById("loading");
 
-    categories.forEach(category => {
-        categoryFilter.innerHTML += `<option>${category}</option>`;
-    });
+    if (!loader) return;
+
+    loader.style.display = show ? "block" : "none";
+
+}
+
+
+// ==========================================
+// DATE FORMAT
+// ==========================================
+function formatDate(value) {
+
+    if (!value) return "";
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+
+        return value;
+
+    }
+
+    const year = date.getFullYear();
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
 
 }
