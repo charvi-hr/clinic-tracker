@@ -188,7 +188,6 @@ function renderTable() {
 
         tr.appendChild(createCell(row.City));
         tr.appendChild(createCell(row["City Head Name"]));
-        tr.appendChild(createCell(row["City Head Email"]));
         tr.appendChild(createCell(row.Clinic));
         tr.appendChild(createCell(row.Category));
         tr.appendChild(createCell(row.Notes));
@@ -198,11 +197,6 @@ function renderTable() {
         tr.appendChild(createETACell(row));
 
         tr.appendChild(createCommentCell(row));
-
-        tr.appendChild(createCell(row["Email Sent"]));
-        tr.appendChild(createCell(row["Email Status"]));
-        tr.appendChild(createCell(row["Reminder Sent"]));
-        tr.appendChild(createCell(row["Reminder Status"]));
 
         tbody.appendChild(tr);
 
