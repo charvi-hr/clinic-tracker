@@ -335,20 +335,9 @@ function markChanged(row) {
 async function saveChanges() {
 
     if (changedRows.size === 0) {
-
         alert("No changes to save.");
-
         return;
-
     }
-
-   const payload = {
-
-    action: "updateTasks",
-
-    tasks: Array.from(changedRows.values())
-
-};
 
     try {
 
@@ -356,35 +345,33 @@ async function saveChanges() {
 
         const formData = new FormData();
 
-formData.append("action", "updateTasks");
-formData.append("tasks", JSON.stringify(Array.from(changedRows.values())));
+        formData.append("action", "updateTasks");
+        formData.append("tasks", JSON.stringify(Array.from(changedRows.values())));
 
-const response = await fetch(CONFIG.API_URL, {
-    method: "POST",
-    body: formData
-});
+        const response = await fetch(CONFIG.API_URL, {
+            method: "POST",
+            body: formData
+        });
 
-const result = await response.json();
+        const result = await response.json();
 
-if (result.success) {
+        if (result.success) {
 
-    alert("Changes saved successfully.");
+            alert("Changes saved successfully.");
 
-    changedRows.clear();
+            changedRows.clear();
 
-    loadData();
+            await loadData();
 
-} else {
+        } else {
 
-    alert(result.message || "Save failed.");
+            alert(result.message || "Save failed.");
 
-}
         }
 
     } catch (err) {
 
         console.error(err);
-
         alert("Error saving data.");
 
     } finally {
@@ -393,10 +380,7 @@ if (result.success) {
 
     }
 
-}
-
-
-// ==========================================
+}// ==========================================
 // LOADING
 // ==========================================
 function showLoading(show) {
