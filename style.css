@@ -1,1 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+}
+
+.container {
+    width: 95%;
+    margin: 30px auto;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #1f3c88;
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.toolbar input,
+.toolbar select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.toolbar input {
+    width: 250px;
+}
+
+button {
+    background: #1f3c88;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #17306d;
+}
+
+#message {
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: green;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+thead {
+    background: #1f3c88;
+    color: white;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    vertical-align: top;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    position: sticky;
+    top: 0;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8f9fc;
+}
+
+tbody tr:hover {
+    background: #eef4ff;
+}
+
+select.status-select,
+input[type="date"],
+input.comment-input {
+    width: 100%;
+    padding: 7px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.notes-cell {
+    max-width: 350px;
+    white-space: pre-wrap;
+}
+
+.changed {
+    background: #fff3cd !important;
+}
+
+.save-success {
+    color: green;
+}
+
+.save-error {
+    color: red;
+}
