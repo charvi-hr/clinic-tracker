@@ -1,92 +1,1167 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinic Operations Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinic Operations Tracker — Allo Health</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ==============================
+   Clinic Operations Tracker
+   Allo Health
+   ============================== */
+
+:root {
+  --plum-900: #23074A;
+  --plum-800: #2E0B5E;
+  --plum-700: #431179;
+  --violet-600: #7C3AED;
+  --violet-500: #8B5CF6;
+  --violet-100: #EDE7FB;
+  --violet-050: #F6F3FC;
+
+  --paper: #FFFFFF;
+  --canvas: #F5F3F9;
+  --line: #E6E0F2;
+  --ink: #1C1230;
+  --ink-soft: #625A78;
+  --ink-faint: #918AA6;
+
+  --amber-bg: #FDF1DC;  --amber-fg: #96590C;
+  --violet-bg: #EDE7FB; --violet-fg: #5B21B6;
+  --green-bg: #DDF3E7;  --green-fg: #116A45;
+  --rose-bg: #FBE3E8;   --rose-fg: #9B1C3C;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow-card: 0 1px 2px rgba(35, 7, 74, .05), 0 12px 32px -18px rgba(35, 7, 74, .28);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Top bar ---------- */
+
+.topbar {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.brand__logo {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
+.topbar__context {
+  margin: 0 0 0 auto;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Page ---------- */
+
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 28px 64px;
+}
+
+/* ---------- Masthead ---------- */
+
+.masthead {
+  background: linear-gradient(135deg, var(--plum-800) 0%, var(--plum-700) 58%, #5A18A0 100%);
+  border-radius: 20px;
+  padding: 30px 32px;
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.masthead__text { max-width: 54ch; }
+
+.masthead h1 {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+
+.masthead p {
+  margin: 0;
+  color: rgba(255, 255, 255, .76);
+  font-size: 14.5px;
+}
+
+.tally {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(78px, 1fr));
+  gap: 10px;
+}
+
+.tally__item {
+  background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.tally__item dt {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, .72);
+  white-space: nowrap;
+}
+
+.tally__item dd {
+  margin: 2px 0 0;
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tally__item[data-tone="open"] dd     { color: #FFD9A0; }
+.tally__item[data-tone="progress"] dd { color: #CDB8FF; }
+.tally__item[data-tone="done"] dd     { color: #9CE8C4; }
+.tally__item[data-tone="hold"] dd     { color: #FFB3C4; }
+
+/* ---------- Controls ---------- */
+
+.controls {
+  margin: 20px 0 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  box-shadow: var(--shadow-card);
+}
+
+.controls__search {
+  position: relative;
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
+.controls__searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--ink-faint);
+  pointer-events: none;
+}
+
+.controls__search input {
+  width: 100%;
+  padding: 10px 12px 10px 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--violet-050);
+}
+
+.controls__search input::placeholder { color: var(--ink-faint); }
+
+.controls__filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field > span {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding-left: 2px;
+}
+
+.field select {
+  min-width: 132px;
+  padding: 9px 30px 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper) url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' stroke='%23625A78' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center/12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  appearance: none;
+  cursor: pointer;
+}
+
+.controls__actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color .15s ease, border-color .15s ease, opacity .15s ease;
+}
+
+.btn--ghost {
+  background: var(--paper);
+  border-color: var(--line);
+  color: var(--plum-800);
+}
+
+.btn--ghost:hover { background: var(--violet-050); }
+
+.btn--primary {
+  background: var(--violet-600);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) { background: #6D28D9; }
+
+.btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.btn__count {
+  background: rgba(255, 255, 255, .24);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--violet-500);
+  outline-offset: 2px;
+}
+
+/* ---------- Table ---------- */
+
+.tableWrap {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  position: relative;
+}
+
+.tableScroll { overflow-x: auto; }
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1080px;
+}
+
+.grid thead th {
+  background: var(--plum-800);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: left;
+  padding: 13px 16px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.grid tbody td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  font-size: 14px;
+}
+
+.grid tbody tr:last-child td { border-bottom: 0; }
+
+.grid tbody tr:hover td { background: var(--violet-050); }
+
+.grid tbody tr.is-dirty td { background: #FBF7E8; }
+
+.grid tbody tr.is-dirty td:first-child {
+  box-shadow: inset 3px 0 0 var(--violet-600);
+}
+
+.cell-clinic { font-weight: 600; color: var(--plum-900); }
+
+.cell-issue { max-width: 30ch; color: var(--ink-soft); }
+
+.head__name { font-weight: 500; }
+
+.head__email {
+  display: block;
+  font-size: 12px;
+  color: var(--violet-fg);
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.head__email--missing { color: var(--ink-faint); }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill--category {
+  background: var(--violet-100);
+  color: var(--violet-fg);
+}
+
+/* status select coloured by value */
+.statusSelect {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 26px 6px 11px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  appearance: none;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-size: 11px;
+}
+
+.statusSelect[data-status="Pending"] {
+  background-color: var(--amber-bg); color: var(--amber-fg);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' stroke='%2396590C' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.statusSelect[data-status="In Progress"] {
+  background-color: var(--violet-bg); color: var(--violet-fg);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' stroke='%235B21B6' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.statusSelect[data-status="Completed"] {
+  background-color: var(--green-bg); color: var(--green-fg);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' stroke='%23116A45' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.statusSelect[data-status="On Hold"] {
+  background-color: var(--rose-bg); color: var(--rose-fg);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' stroke='%239B1C3C' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.dateInput {
+  font: inherit;
+  font-size: 13.5px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  color: var(--ink);
+  min-width: 142px;
+}
+
+.dateInput.is-overdue {
+  border-color: #E5A0B3;
+  background: var(--rose-bg);
+  color: var(--rose-fg);
+}
+
+.commentBox {
+  font: inherit;
+  font-size: 13.5px;
+  width: 100%;
+  min-width: 190px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--violet-050);
+  color: var(--ink);
+  resize: vertical;
+}
+
+.commentBox::placeholder { color: var(--ink-faint); }
+
+/* ---------- States ---------- */
+
+.empty {
+  margin: 0;
+  padding: 44px 24px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.loading[hidden] { display: none; }
+
+.loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, .84);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  color: var(--plum-800);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 5;
+}
+
+.loading__spinner {
+  width: 17px;
+  height: 17px;
+  border: 2.5px solid var(--violet-100);
+  border-top-color: var(--violet-600);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.footnote {
+  margin: 14px 2px 0;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+/* ---------- Toast ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  background: var(--plum-900);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 16px 40px -12px rgba(35, 7, 74, .5);
+  z-index: 50;
+  max-width: min(88vw, 460px);
+}
+
+.toast[data-tone="error"] { background: #8A1533; }
+.toast[data-tone="success"] { background: #0F5B3D; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+  .topbar__inner, .page { padding-left: 16px; padding-right: 16px; }
+  .masthead { padding: 24px 20px; }
+  .tally { grid-template-columns: repeat(2, 1fr); width: 100%; }
+  .controls__actions { margin-left: 0; width: 100%; }
+  .controls__actions .btn { flex: 1; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+</style>
 </head>
-
 <body>
 
-    <div class="container">
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <img class="brand__logo"
+           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGoAAABgCAYAAAD1uufxAAAbz0lEQVR42u19e3iU1bnv733XN5PLAHIRIQhJZhKrDhV9DLV1W3dART1Wa2sNHq+AuKlVwcvep6dn9zIZ++z27O5TUXDXFreIYq1lqlv6tOKVMMdtj8eaVkXiFpJJAh4joHJJyGXmW+s9f2R9+DnOTEgAJZj1PN8TwnzfN2u9v/f+vmsFGBk5R13dGiUiJBC6feGfxt9xw0vv3jr/hd94n33a8+ERSIBYTBgAbp2//oL/fuNfHlty3VMzEom5esmSdUECidbd3xsTmlhGRNsAoO4zmOMIUACADQwAApwUKh17hRMc839uunbdpcuXX9T3D/MaJjM7N+/p7Nie7qI7AaAuUWdGgPoMRjw+243FYrxs1Tn37Phgyw1EVBIqHZe4ZcELp6YZM8eOOb5US2blLxKzu2K1DQ6BZASozwysuKmrW6PufeiCB/oy3Vc6qiiggEcAWdCX7gIRPQ0INR23Uz6L+Y0A5RuJxFwdq1sTvHfVnN92de1cVlI89otMfNm+7g/SDtAOkESjm0aAOjLQ2uTGYsJMgVhv797tzI6AqDstfd0AUF9fPwLUEaECETfYsIHveWj2biPmN8FACQEIBISLLVA0AtQRMvrtkJAYrHPdXjgqEHKpqAIANTVNHwHqSBn9dohEKdOcdnt6g4EQIGYOAIlGJw4ZqFhtgzPUYJlGYPnkEBEiIvn7G186zu3t2+w4RWMybl+rjJ4afe+919xEos5g8C469YdqIxJ1yIZnh3rSvSUCU2LEpZLiMRHsab2j3zNMBAYBO1kpktuuX790yYL1C/3ZkBGgDsZG9dshcoSnlZaMCxqt/9CX7txWUjKu/uZ5z82KJ+amFy16NSAiBTVSXd0aVVeX4ERirl684PkfHTuu6jYSfAMApjcNTps5I7DkslETCYAQ9DnFRaOxr2/3crgCpzj4TFGg5Mlb5z97xT0rZj6zYkU/GNEdEz8WCEd3TCTMmmXicdIAcOv8hh+ESsfHP9zdvlVB3SQQqo8Ozs0fsVE5VVWCo9Go2r31/c3EfKxBumrZA+dtv/napxeHSscvE9FIu70/I4fvvntFbUe+Ny2Zv+FLzLhzzKjJF3Z173yvJ9N98X0PXdAYiwnH42RGJOogRqwuEYgn5qZvmffMHRPGhis+3L3tnuUPnbd98eKnipYvv3D54vnPtAVU6N6xo6d8d09nx823LtjwhMAkFXHKINMLobEkaroQ5hDROcFAibN3347H9+7cvGDl72/oXLTo1QBQr0e8vhxrjMViBNSjEBcLhL69qNFZsWJm5qbrnvnbUPHY57ROf5gxMmPZyrPfr6+vp6am6ZRIzNU3X/vEhGDw2JsB3FBaMm6a0RmkM90wosHkIBAoBkDIZHqgjQvAPKXIWW8Mnl/64NmvD8UL/FypvlhMGBs2cLY9mX7cLJmb6LcnS+Y/PyfglCSUChzT3bPronsfvmBdXd0alUjM1Z6D4P379tv/VCL7MieTa+qJnYuYlAKAdKanE8B2EFwIRgeDpceHSsaju2cXtE4/rmF+eM8Ds94SCB1oJv5oBYoAwaJFjU5xes9TjlPU40rvD5Y9cN4b+R647ep1ZVJUfFswUPpdAqOn+4OFy1dfuNIPzEeAx7ij4xK1YsXMzOJ5L9QHAkX/A0BQjLsWoNVk8Mrofdu3xxNzM7FFr5bsSncdz4TZAiwcd8zxZ3y4Z+tu1VUyZWnizF473QHBOmptlACYuytFZaPG8+jQcZd0de+85NYF658GeB1BmkDYLTClAEdIqFYgF5UExxyXdrvf7OneM/++Ry9uzJ1FEGpqSlAiUeMunvfC6gnjyq/Z0/nuFtHujXevOnf9J3KHK2Z2A9hirxW3LUzeIEJjxkTP7DtQkI5y1SdkiUC3Xt8wj8lZXBwMnc7soDfdCa0zIGIEAyVgduC6fTBGQ+vMm6TUWoJ58a5/W/8cEDfWSxMA4knY4nnP/NP4sZX/uKfzvSRRz2VLH7jwQw/YaHSTxOP14pmhWKyesGEWx5Oz3YNQEZ8X+xTjfR2XhLXet5hANxKpIqUc9KX39UKkQwhdBBQDFB4zarJjRKOnZ/dfjM7cefeqc9YCoFhtg4onZ7u3L0yeEXBKX864Pan30+9/efXqyz6IxRqceHxAIChW26AAYLCgfR4yE7T4wqeK4vG46e15fyaRmhtwSoq0ybzS5/beqFznVN73wfRlD54747UURwOGpnV17vhad/eHv1EqcHppaMKTty5o+Nfa2pjCrH5Jdd3MPzlOkLROf2cQIAGAxJOz3aFI1lEvUZ6quuW6Z24fM7rsrp7ePa6Iu3jpylm/Gsjjun1ew1dE8X3HjC47bdfed55Y9uA531oyf8MJxUUlm3v6Ol9avuq8r+ZyNg7H4M8DSIvnr780VDr+rr6+zvddt+fsu1fO/iWkv+wQi8W4355Zyy79SdRYbYOz9KHZL+/Frr/d29mxbsLYisuWzH/+H0Hy5dKS8VBQqwChgyl7jGQmPoKqn/ok31EqiL3dH8y97+ELX47VrQkSURqAiyQAxD/yQIgAQAP9QMZXzu78b9c/ecWevfRnRxXVuybd0rlvB0Twar+zIp9K69hRrfq8gPKmhU9Xc6+U3fvr//LiYFVVrLbBiSdnu4uvfbY2WFTaIBByM33dRcqc8C8rz3/Xq12NJN8Osec3VBVqsxbPfPfbr5gl89fv/od5f5gM9BcZR1TfIQSoqWk6xeNDM/rRHROp3441PAqi84kQ6qPi8QDes0XGwy5Rn4vCYTweNwflmc2aZQASIefPfX2dblFwlOOQmgEIYcOsT4WGwwkoLnANZIeH+iwAoD6+X2J2imAvEYvWug4g+bQ6Z4cTUKbANVDar9CzB2xjQm6fAQy7bi8pp+jim+c/d0oiMVd/Gttwho2NqqioOCkYDBZnMpmPcTAz61Qq1ZQDMAIg1dXVRVrrE7ONfiAQoEwms6utra19QImK1RPikG4l45mDo103vT0QKJ7kmMB9Ajm7PgoZStX2qJGo2tpaBwDC4XCd4zibtNZ/ZebXsq6N4XD4e/77/WvTWt+vlHo9+zljzF+ZeVMkEjllQFpsmMWAEHFg+phRkxSAn6Uz++4eP3baWbcu2HBfPE6mH6TD5wEOC4kioggRsTEmQ0T7W7VExAXgENGJeVQlAETtTw1A+Z7VzBzKZDLTAGwspAL77RCJMc9d5eo+iCA5rtJ5fde2bWeMGzPl27ctaJjoGNwcqqzfEY8LcBi25QwLGyUiaWtr8hGzr8DjvQWcDGHmTGHXXrx2r2hx0ZhLO7t2vtlbNOYNYJYRvetre7o6npw44YTL0mRuicfjJhbboD53qi+LqDTEDEuhNdJAAavXf8dC/zy6dGIQxD9YsWJmpqOjUd3z0Dd33/3ArG/u6nznGxlkftXvIc7Sn1vV91mOTdF+19wI1ry/O7Vx+arz1gJCK1ZQxitO/q9ffWXtRxxzeNJJI0ANGCz3e3LLHzp39UfS64HR/3NNnai6BMzh3DI60tJ8gMMrfeRKF81NkD7c+3qHCpQX7SsAjnWLHfs74yjMyicSc/UBVGYPG114kOB4X+pF+xqAm0wmXQCu/d3Yz717yfe8KpDKUcMUQ29dB0oXtgAOSkicQUiPtl+KsrKy0lAoVKm1Pp6IJtjYpg/ATmZu37JlS5t3rx3KPq+PIiHz00UDQDQaDfb29lYQ0VSt9USlVJGIaCL60BjzLhG1p1KpPclk0mQJijlYoPYTeMqUKROKi4svIaKvG2NmGmOmKqUoK96B1jodiURaiOhFInq8ubn5eQC6vLx8nOM4KwBMFBF/js0wszLGvNja2vojX37uSB776VJeXj5OKXURM1/c29t7BoByAI7jOF6w7v+5PRKJvEFEzxpjft/a2rrZ9z5TaN3OQJP5whe+cKzrurcDuJ6ZJ9v8GkQExhjv5eKLdYJEdDIRnQxgUVVV1WvGmJ8wcxMRXZ4n8wAR+WI0Gv1xU1NTGge5O+9TiOd0RUXFZKXUEgDzmHmKn1lFxIiI+NbAAJiIJhHRHABzmPnHkUhkrYj8vLW19c+++8yBAuVxuo5EIle6rvszpdRUYwy01tpyBvlEP0ciQcQYY4iImfk0pdQarfWbRNQLIHu3niEiBrD7CJcij4hSVVW1CECciCZbhtVZQDLyEcaCSETFzHyFiNRFIpFfaq2/397evtsnrQWdif2qLBKJLGPmR4loquu6rn25OgAPhiz3OADY2MHMXwRQ7DO8ua4jGqTq6uoxkUhkDRH9CsBkrbVrJedA6LLf8bC0Ea21FhFSSt3kOM7L4XD4SxYkpxBQ+wtskUhkjVJqsTHGFRFjX0wHsUi2dmk4DgZgysvLy4wxDcxcZ+kiB0kXsoxPruu6AE5k5oZIJPI164g5OYGqra1VVt2tVEpd7rpuxt6cz40UAFpEXO+y3CBHUXBNAKSiomKs4zjPMPPpWmuPLjRIupgCiDkiogGEAPx7JBI514KlsomnksmkGw6H71BKXee67sfKCTlUrQZAzKyUUo53MbMiIrKfD/cWqv22Rin1W2Y+RWtdiC4GgKZ+w5yLLuyBmM95s9orQESJ6urqKnsvwxeUmqqqquki8lPrMOTzBjURKetO7zbGvApgM4A9AEYDOBHAl5RSYz3vZxinqRiADofD31dKnV+IeW1tSxERjDEfiMhf0b/NZreIlAAoJ6JTiaiKiJT1lnNVBNi+a5wxZjWAsz2m8QARrfVSx3GCFqhcYq0tQB0i8j9d101s3br1ExuNy8vLywKBwFUi8j1mPta+Tw1DkExlZeWJRPTDAZjXKKWUiLxhjFnKzH9sbm7emX1TdXV1kTHmLBFZzMzfKMDISmvtKqXOrKysvKmtrW15bW2t41iuOVspNccYk4+oHkhPu657vQ8grq2t3f9FyWTS2M9+XllZ+TsiekQp9VXrvqphpvYMEcWZucgY4+bgfvGCdRH5GRH9qKWlpS8PXaS5ubkPwHoA68Ph8OXMfD8Rjc0FFhGxiBhm/mFFRcXqZDK5x+OSm3yBa06QRGRdKpW6BICuqakJNDY2ugCMLx2y/3tqamqcxsbG9rKysgtKS0ufZeazrLjzMFJ5XyCiy+y8c0mTl1G5LZVK3ePLhep8dPHc99bW1t9VVVW1isizRDQuB1hsjHEdx5kI4DoAyzgcDk8ioguMMZSD643tVXgnk8lcbSehGhsbMwWcBbGfOx0dHd3pdHquMeZ9q02PeAfDkwRmvpaZA7nCCs8maa2XpVKpe2pqajzb5Raii5cvjUajwZaWlkZjzJX5BMQ6ZSIi1wJgBnAeM49D7h43sfbqB1u3bt1ls74Hmlh1AQS2bdv2rojUe+J8pAOVTCa1NepfFxFYby1bktgY05rJZL5nGdcdDBM2NTWla2pqAm1tbc+KyINWY2WXUFR/codOq6iomMFENCsPqsZ6KFuZ+TEAZBcxmOEC4N7e3ge11u8yszrCpYoBSHl5eSWAk/uTDshOPBvqH0vfeeedntra2iHlJRsbG70Q56fGmLT1DSSH2XGY+RwWkdNsg0euCUFEnmpubu6zAfFgJyS1tbXc0dHRDeAP9n36CAcKzHwKMwes9qAsDeMYY7qZ+QnLvEPVEgYANTc3t4jIS8xM+YJiIvoy27T8JzjH89BF5E84+IotAfjfw8A+eWuv8iL7HGoPADZt2bLl//kIfjD2kIhoQ57vI+vGn8AAxuYScaunQURtACSZTA5JZdnnhJlT9n3DwU2fVMAhgIi0HIq0WDKZ9N652XMg8iTJj2UiChaQAiiluvyTHMLwFteVhyGOxFGSJwPh/XOvlYiDXYv3ws4B7ivigbw4rXUgl2ocQqo4OFxcdCIaqIkl6JOIQ/F9gQE+1wwgn8QYS9hJh8A+wRhTZt83HModu/IQjOzPqQdrn3wSSQCm5bFR3tjDALbnSu35HjoFAA1VzL3niOj0ASZzJElUm9+hyjbuAL44adKkEAa5vyqf/RaRLw2gGrcygLdycbqPey6wzoQZ4mS85y7OYzCPpGDXWGZ6ywKicjhYmpknjxo16qsoUHY/0HzijBkzQgDm5HG0xIY0rzGAl/K8SBljBMDfVFVVTbfoDtZj80ooZxLRTJs3O5K9PgGAnp6eJhHpsEyVk0GNMbfZOHGojKcAyN69e69m5sk2cZ3P806yMeZZmx1WeRKPjjHmTgBSU1MzqIZNbxEi8s920Ue62pO6ujplA/QGm24zORjYMPOFlZWVX08mk64v1zcYkNwpU6ZMYOZ6L9uRw0cgY8y7zPwf3NbW9gaARmbOVX1UxhitlLosEoksaGxszNhJDcRFXFNT4ySTSTcSifyQmc8eLqWORCLhqf7VVlPnW6th5gcqKytPHARdgI8y7FRcXPwIM5dZu83ZmSFmBhGtbW5u3stWDz5gs7U5iW5bv1ZEIpGrfJnz7L5qrxPHAWAaGxsz4XD4Dma+c5jVozQAmjp16vPGmI02KWvyqKRjmfm5cDh8RgG6MADl27bqVlRUjI1EIv/OzBfmo42tWhgA93mRNXV1dT3quu473J8fyVVHIRFRRPTrSCSyrLy8vMwmXP2NG15rr1tRUVEZiUQeVkr9fBjVoT4GRDKZdEXkTsvAuewUW5U1jZmTkUjkRyeddNKEHHQxALTtQ1fhcPhypdT/ZeZL84EkIq7N0K9JpVIbASgHgNq+ffu+qqqq7xPRQ7bKm6vfT0REmHmx4zhXh8Ph34tIg1Jqi806lAA4gYjOB/BNZh49TEHypEq1trb+LhKJPKeUmqO1dnOU473STTEzx9Pp9HcikcgfjTFJpVSziHTazM80EfkygIuZ+RRf02YuLSNWmvYy83c92jsWfdXS0vJwOBy+Qil1UZ5Jkc1UaGYez8zzAcz31KXVp55HhGFYfs/lARKAG+wO+nF5ehwY/T0nhpknE9FCZl7oNyNE5LVte23gyAeSiLhKqYDrure0tbVts/dp9k+KiBaISDszOzkKWd6XKtuy7BpjtBfA2v/T1oOUYQ6SF1dyKpXa6qvE5stGkEcXrXVOutiuWoMCJ8aIiOs4TsAYc1dbW9tqf6HWv+2DUqnUDhG5GMCOQmDh43ulsvc/5WtOlGGqAh1bib3aFgy5EF2sJvoEXbwW7wJMoR3HCWit70+lUn+P/l5L7Rdb/80qlUq9KSLniUhKKeWpRnMIFjxcdyG6AJxUKvWYiFwCYJdSymPig6WLiIhrN1MorfVPUqnUIvg2JOQCar8RTaVSG7XWZxlj1jKzY50Lz6uTwUzC2i8lIhkfJ8owkzgPrD8aY75ijGlQSg2ZLgCMpQU5juOIyDta68tTqdT3PZuX/T7O5/G0t7e/l0qlviEi8wBsZmZlex4Itrfa54Zq+PqtvajaLgZa61Uicrkvl5VLugIDLC47DNj/O1HBM4iyn8m+BgOWam1t3ZxKpc4Rkb8D8HYuuvj6zfeHLPb/tVWPbLXVXq31Xcx8emtr6+MosKHNGUBVUUtLy8NlZWW/KykpmUtE1wA4k5lLB7TExrwD4I/GmJWtra2vVFRUTAawD8Ao5DiFRUTea2pqyqkiiajI9tCprESBYma4rltoPiFLyGznRtkNeTxIFc4ApKWl5d/KysoeDYVCl4nIVQDOYuYxnndXgC5aRF4H8Lgx5te+Q7NUIcZxBuBiAeDlvlYBWFVRUVEpIjXMfKqIRABMEJEgEXUD2A7gbSJ6NRAIvPr22297lUvV3t7+XnV19cnMPKqv7+Mn4hQVFaGvr2+Hj0HEn83WWj9NRBcBKLb9hx6ARmttROS3AHDcccdJduxHRMu01tfbHjmvR8EQEbmu21FUVPSql8kehDcIH10eAfDIiSeeOEVrfbox5lQA1SIyUURKiCgDYDcRbQWwkZkbm5ubm7IT1zhE+5spy5MZTPLxaD7Lgoa6xqHsjB90esWXu/pEPsv3/5Tn2XzXQOcZeffkuvgAns13ZAIdStBynC2RTZuRQ1hGxsg4InTsoVSJjI8fBLJfH9so+xMNhrYD92PDOhGFjLuqra0lm5EuNBwUPnfW8Zouc8zhE/U5u45c7/PUsh5hqcPDXJ+rRTP6+yJOF5EZqVRqld89rqioKFZKzSOiF1paWpr9kXd5eXmZ4zhfF5GQTWoapZTSWm9obW19BZ88IIMASGVl5aVENLG8vHxVIakKh8PXKKWam5ubX85+V3V1dZGI3CAipbbkvk9EFDMXWTd+WyqVeswXLjjhcHi+Meal9vb2t/x50nA4fDYRTUulUo8eTg/uoIa3n0hEvgVgZTYTKKXGMPMvReSsLBWJQCBwklLql0S0UESuEJG5AOYy80kAUFdXR9kg2T6DxwKBwP3t7e1n+cKAXBnSFcaYa/zz9M0rKCJ1RHS1iFxFRL8gon8B8F+Z+RoROd9Po0mTJhUx8/3MfK73Pt87bwDwr4dT4g/ZwYpE1C0iH2Rljb0alktEfTmSgRmttZvJZOZs27bt3ezPE4mE9jGESiaTuqSk5DIRSbmuu5eZ/w5A0tqrXNP6gIj25cop2mB8lk/6NhHR+paWlsW5AlxmFmNMN/rPqKWuri76aOnUBeCDw6n6DhlQVl2wz2HwiNyX7+AMESFmdgKBQGig9/uaFa8H8DSANwD8orq6uiiZTPYh9/lJaoAUEfueC6C/55yj0ajT1NSUKzvu2IKot6vSD74zLIDy0k3Tpk2bUlpaCq019/X1GQATDuDZYyoqKsZqrVkpZdrb27uyvEcGoKurqycaY74iIt9VSv0ngFJjzDkA1uGjI9kGM0wWwALATJw4MaenaFNPx1rbGgAAe3DKGBzmVu1DGSX3MfMxgUBgUzqdfltr/ZbjOG8D+A9m9h/slGusY+a3g8Fgk1JqSyQSOc1ve7x9RFrrOhHZ1tra+mJzc/NOY8yLInKDtWeH1esKhUKOiHQy84+VUv8pIptEZJPjOG8BuFJEdg8XiSqyDRlniQh5fwBLRMYZY160HU751Ob1RNQqIkxE0tPT0+K3DzZ2ESK6EsCuqqqq66xK201EF06aNCmUSCT24TAeH9fZ2alDodAoAD9VSiWY2QEA25IQAzBzuABFANyszDCi0eio3t7egt6QMWZje3t7Wx51ygDM1KlTjwdQA2CjMWaRNeJpZi4dNWrUnO3bt6+1EujmmBfv3LnT36uQS60V3PrKzCIijoi02b8Fsn9UVlbu8IAbDkAhK0HKAExPT0/oYPYF1NbWcjKZNMFg8Fvor7L+jd8WRSKRt617/GSuzAeANABjD2w8FHa4yHM4AKCpqcm1+5tkOAGVza1GKeXrkMqTD1JqelVVVciqMwGwN5VKbcXHNzMvFJE/ANDRaDSYTqepubk5Y4y5n5l/EolEjkmlUnv8ga1tZCyrrq6OElFA9w+3vb1980EYf7/D4a33c/MX2daKyEYAf2HmN0RkKQDU1NQ46D+TqIKIZjDzwwCoqanJNDc3ZwCYQCDwhN3BflFWYAv0n6o53xjzutb6L0T0hlJqQ3V19ajhlo76/9W6vy+Bsi20AAAAAElFTkSuQmCC"
+           alt="Allo Health">
+    </div>
+    <p class="topbar__context">Clinic operations</p>
+  </div>
+</header>
 
-        <h1>Clinic Operations Tracker</h1>
+<main class="page">
 
-        <div class="toolbar">
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search...">
-
-            <select id="cityFilter">
-                <option value="">All Cities</option>
-            </select>
-
-            <select id="categoryFilter">
-                <option value="">All Categories</option>
-            </select>
-
-            <select id="statusFilter">
-                <option value="">All Status</option>
-                <option>Pending</option>
-                <option>In Progress</option>
-                <option>Completed</option>
-                <option>On Hold</option>
-            </select>
-
-            <button id="refreshBtn">
-                Refresh
-            </button>
-
-            <button id="saveBtn">
-                Save Changes
-            </button>
-
-        </div>
-
-        <div id="message"></div>
-
-        <div id="loading" style="display:none;">
-            Loading...
-        </div>
-
-        <table id="trackerTable">
-
-            <thead>
-
-                <tr>
-
-                    <th>City</th>
-                    <th>City Head Name</th>
-                    <th>Clinic</th>
-                    <th>Category</th>
-                    <th>Notes</th>
-                    <th>Status</th>
-                    <th>ETA</th>
-                    <th>Additional Comments</th>
-                
-
-                </tr>
-
-            </thead>
-
-            <tbody id="tableBody">
-
-            </tbody>
-
-        </table>
-
+  <section class="masthead">
+    <div class="masthead__text">
+      <h1>Clinic Operations Tracker</h1>
+      <p>Open issues across the clinic network. Update status, set an ETA, and save — the sheet and the city head's email stay in sync.</p>
     </div>
 
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+    <dl class="tally" id="tally">
+      <div class="tally__item" data-tone="open">
+        <dt>Open</dt><dd id="tallyOpen">—</dd>
+      </div>
+      <div class="tally__item" data-tone="progress">
+        <dt>In progress</dt><dd id="tallyProgress">—</dd>
+      </div>
+      <div class="tally__item" data-tone="done">
+        <dt>Completed</dt><dd id="tallyDone">—</dd>
+      </div>
+      <div class="tally__item" data-tone="hold">
+        <dt>On hold</dt><dd id="tallyHold">—</dd>
+      </div>
+    </dl>
+  </section>
 
+  <section class="controls" aria-label="Filters">
+    <div class="controls__search">
+      <svg class="controls__searchIcon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+        <path d="m13.5 13.5 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <input id="searchInput" type="search" placeholder="Search clinic, city head, issue…" autocomplete="off">
+    </div>
+
+    <div class="controls__filters">
+      <label class="field">
+        <span>City</span>
+        <select id="cityFilter"><option value="">All</option></select>
+      </label>
+
+      <label class="field">
+        <span>Category</span>
+        <select id="categoryFilter"><option value="">All</option></select>
+      </label>
+
+      <label class="field">
+        <span>Status</span>
+        <select id="statusFilter"><option value="">All</option></select>
+      </label>
+    </div>
+
+    <div class="controls__actions">
+      <button id="refreshBtn" class="btn btn--ghost" type="button">Refresh</button>
+      <button id="saveBtn" class="btn btn--primary" type="button" disabled>
+        Save changes<span class="btn__count" id="changeCount" hidden>0</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="tableWrap">
+    <div class="tableScroll">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th scope="col">Clinic</th>
+            <th scope="col">City</th>
+            <th scope="col">City head</th>
+            <th scope="col">Category</th>
+            <th scope="col">Issue</th>
+            <th scope="col">Status</th>
+            <th scope="col">ETA</th>
+            <th scope="col">Comments</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <p class="empty" id="emptyState" hidden>Nothing matches these filters. Clear the search or pick a different city.</p>
+
+    <div class="loading" id="loading" hidden>
+      <span class="loading__spinner" aria-hidden="true"></span>
+      <span id="loadingText">Loading clinic issues…</span>
+    </div>
+  </section>
+
+  <p class="footnote" id="lastSynced"></p>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden>
+  <span id="toastText"></span>
+</div>
+
+<script>
+// ==============================
+// Clinic Operations Tracker
+// script.js
+// ==============================
+
+// ===================================================================
+//  PASTE YOUR APPS SCRIPT WEB APP URL BETWEEN THE QUOTES BELOW.
+//  It looks like:
+//  https://script.google.com/macros/s/AKfycb................/exec
+// ===================================================================
+
+const SHEET_API_URL = "https://docs.google.com/spreadsheets/d/1Vy22IDZNvgmT5cQ6lDMV1K79JcEFV3NB3b0DptZXtm4/edit?gid=1637337718#gid=1637337718";
+
+// ===================================================================
+
+
+let allData = [];
+let filteredData = [];
+const changedRows = new Map();
+
+const STATUS_OPTIONS = ["Pending", "In Progress", "Completed", "On Hold"];
+
+// City head name -> email. Add a new line here when a city head joins.
+const CITY_HEAD_EMAILS = {
+  "Priyanshi Paul":     "priyanshi@allohealth.care",
+  "Rohit Nair":         "rohitnair@allohealth.care",
+  "Ram Shetye":         "ramchandra@allohealth.care",
+  "Syed Shabaz":        "shabaz@allohealth.care",
+  "Lakshmi R":          "lakshmi@allohealth.care",
+  "Shalini A":          "shaliniprakash@allohealth.care",
+  "Mudit Srivastava":   "mudit@allohealth.care",
+  "Vijay Mikkilineni":  "vijayanand@allohealth.care",
+  "Javid Lal":          "javidlal@allohealth.care"
+};
+
+// Sheet headers vary slightly, so each logical field lists the headers it may
+// arrive under. The first entry is what we write back to.
+const FIELD_ALIASES = {
+  clinic:   ["Clinic"],
+  city:     ["City"],
+  cityHead: ["City Head Name", "City Head"],
+  category: ["Category of the issue", "Category of Issue", "Category"],
+  notes:    ["Issue Notes / Description", "Issue Notes", "Description", "Notes"],
+  status:   ["Status"],
+  eta:      ["ETA"],
+  comments: ["Additional Comments", "Comments"],
+  cc:       ["Anyone to be CC'ed", "CC"]
+};
+
+// Build a quick lookup of normalised name -> email so small typos in the
+// sheet ("priyanshi paul", "Priyanshi  Paul") still resolve.
+const EMAIL_LOOKUP = Object.entries(CITY_HEAD_EMAILS).reduce((acc, [name, email]) => {
+  acc[normaliseName(name)] = email;
+  return acc;
+}, {});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadData();
+
+  document.getElementById("searchInput").addEventListener("input", debounce(applyFilters, 180));
+  document.getElementById("cityFilter").addEventListener("change", applyFilters);
+  document.getElementById("categoryFilter").addEventListener("change", applyFilters);
+  document.getElementById("statusFilter").addEventListener("change", applyFilters);
+  document.getElementById("refreshBtn").addEventListener("click", handleRefresh);
+  document.getElementById("saveBtn").addEventListener("click", saveChanges);
+
+  window.addEventListener("beforeunload", (e) => {
+    if (changedRows.size > 0) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+  });
+});
+
+
+// ==========================================
+// FIELD HELPERS
+// ==========================================
+function normaliseName(name) {
+  return String(name || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function emailForCityHead(name) {
+  return EMAIL_LOOKUP[normaliseName(name)] || "";
+}
+
+// Which header this row actually uses for a logical field.
+function resolveKey(row, field) {
+  const aliases = FIELD_ALIASES[field];
+  for (const alias of aliases) {
+    if (Object.prototype.hasOwnProperty.call(row, alias)) return alias;
+  }
+  return aliases[0];
+}
+
+function getField(row, field) {
+  const value = row[resolveKey(row, field)];
+  return value === undefined || value === null ? "" : value;
+}
+
+function setField(row, field, value) {
+  row[resolveKey(row, field)] = value;
+}
+
+
+// ==========================================
+// LOAD DATA
+// ==========================================
+async function handleRefresh() {
+  if (changedRows.size > 0) {
+    const ok = confirm(
+      `${changedRows.size} unsaved change${changedRows.size === 1 ? "" : "s"} will be lost. Refresh anyway?`
+    );
+    if (!ok) return;
+  }
+  loadData();
+}
+
+async function loadData() {
+  try {
+    showLoading(true, "Loading clinic issues…");
+    changedRows.clear();
+    updateSaveButton();
+
+    const endpoint = resolveEndpoint();
+
+    if (!endpoint) {
+      showSetupNeeded();
+      return;
+    }
+
+    const response = await fetch(endpoint);
+    if (!response.ok) throw new Error(`Request failed (${response.status})`);
+
+    const data = await response.json();
+    allData = Array.isArray(data) ? data : [];
+
+    populateFilters();
+    applyFilters();
+    stampLastSynced();
+  } catch (err) {
+    console.error(err);
+    toast("Couldn't load the sheet. Check your connection and hit Refresh.", "error");
+  } finally {
+    showLoading(false);
+  }
+}
+
+
+// ==========================================
+// FILTERS
+// ==========================================
+function populateFilters() {
+  populateDropdown("cityFilter", unique(allData.map(r => getField(r, "city"))));
+  populateDropdown("categoryFilter", unique(allData.map(r => getField(r, "category"))));
+  populateDropdown("statusFilter", STATUS_OPTIONS);
+}
+
+function unique(values) {
+  return [...new Set(values.map(v => String(v).trim()).filter(Boolean))];
+}
+
+function populateDropdown(id, values) {
+  const dropdown = document.getElementById(id);
+  const current = dropdown.value;
+
+  dropdown.innerHTML = `<option value="">All</option>`;
+
+  [...values].sort((a, b) => a.localeCompare(b)).forEach(v => {
+    const option = document.createElement("option");
+    option.value = v;
+    option.textContent = v;
+    dropdown.appendChild(option);
+  });
+
+  dropdown.value = values.includes(current) ? current : "";
+}
+
+function applyFilters() {
+  const search = document.getElementById("searchInput").value.toLowerCase().trim();
+  const city = document.getElementById("cityFilter").value;
+  const category = document.getElementById("categoryFilter").value;
+  const status = document.getElementById("statusFilter").value;
+
+  filteredData = allData.filter(row => {
+    const haystack = [
+      ...Object.values(row),
+      emailForCityHead(getField(row, "cityHead"))
+    ].join(" ").toLowerCase();
+
+    return (!search || haystack.includes(search))
+      && (!city || getField(row, "city") === city)
+      && (!category || getField(row, "category") === category)
+      && (!status || getField(row, "status") === status);
+  });
+
+  renderTable();
+  updateTally();
+}
+
+
+// ==========================================
+// TABLE
+// ==========================================
+function renderTable() {
+  const tbody = document.getElementById("tableBody");
+  const empty = document.getElementById("emptyState");
+
+  tbody.innerHTML = "";
+  empty.hidden = filteredData.length > 0;
+
+  const fragment = document.createDocumentFragment();
+
+  filteredData.forEach(row => {
+    const tr = document.createElement("tr");
+    tr.dataset.rowNumber = row.rowNumber;
+    if (changedRows.has(row.rowNumber)) tr.classList.add("is-dirty");
+
+    tr.appendChild(textCell(getField(row, "clinic"), "cell-clinic"));
+    tr.appendChild(textCell(getField(row, "city")));
+    tr.appendChild(cityHeadCell(row));
+    tr.appendChild(categoryCell(getField(row, "category")));
+    tr.appendChild(textCell(getField(row, "notes"), "cell-issue"));
+    tr.appendChild(statusCell(row));
+    tr.appendChild(etaCell(row));
+    tr.appendChild(commentCell(row));
+
+    fragment.appendChild(tr);
+  });
+
+  tbody.appendChild(fragment);
+}
+
+function textCell(value, className) {
+  const td = document.createElement("td");
+  td.textContent = value || "—";
+  if (!value) td.style.color = "var(--ink-faint)";
+  if (className) td.className = className;
+  return td;
+}
+
+// City head name with the email filled in automatically.
+function cityHeadCell(row) {
+  const td = document.createElement("td");
+  const name = getField(row, "cityHead");
+
+  if (!name) {
+    td.textContent = "—";
+    td.style.color = "var(--ink-faint)";
+    return td;
+  }
+
+  const nameEl = document.createElement("span");
+  nameEl.className = "head__name";
+  nameEl.textContent = name;
+  td.appendChild(nameEl);
+
+  const email = emailForCityHead(name);
+
+  if (email) {
+    const link = document.createElement("a");
+    link.className = "head__email";
+    link.href = `mailto:${email}`;
+    link.textContent = email;
+    td.appendChild(link);
+  } else {
+    const note = document.createElement("span");
+    note.className = "head__email head__email--missing";
+    note.textContent = "No email on file";
+    note.title = "Add this name to CITY_HEAD_EMAILS";
+    td.appendChild(note);
+  }
+
+  return td;
+}
+
+function categoryCell(value) {
+  const td = document.createElement("td");
+  if (!value) {
+    td.textContent = "—";
+    td.style.color = "var(--ink-faint)";
+    return td;
+  }
+  const pill = document.createElement("span");
+  pill.className = "pill pill--category";
+  pill.textContent = value;
+  td.appendChild(pill);
+  return td;
+}
+
+function statusCell(row) {
+  const td = document.createElement("td");
+  const select = document.createElement("select");
+  select.className = "statusSelect";
+
+  const current = getField(row, "status") || "Pending";
+  select.dataset.status = STATUS_OPTIONS.includes(current) ? current : "Pending";
+
+  STATUS_OPTIONS.forEach(status => {
+    const option = document.createElement("option");
+    option.value = status;
+    option.textContent = status;
+    if (status === current) option.selected = true;
+    select.appendChild(option);
+  });
+
+  select.addEventListener("change", () => {
+    setField(row, "status", select.value);
+    select.dataset.status = select.value;
+    markChanged(row);
+  });
+
+  td.appendChild(select);
+  return td;
+}
+
+function etaCell(row) {
+  const td = document.createElement("td");
+  const input = document.createElement("input");
+  input.type = "date";
+  input.className = "dateInput";
+  input.value = formatDate(getField(row, "eta"));
+
+  flagOverdue(input, getField(row, "status"));
+
+  input.addEventListener("change", () => {
+    setField(row, "eta", input.value);
+    flagOverdue(input, getField(row, "status"));
+    markChanged(row);
+  });
+
+  td.appendChild(input);
+  return td;
+}
+
+function flagOverdue(input, status) {
+  const overdue = input.value
+    && status !== "Completed"
+    && new Date(input.value) < new Date(new Date().toDateString());
+  input.classList.toggle("is-overdue", Boolean(overdue));
+  input.title = overdue ? "ETA has passed" : "";
+}
+
+function commentCell(row) {
+  const td = document.createElement("td");
+  const textarea = document.createElement("textarea");
+  textarea.className = "commentBox";
+  textarea.rows = 2;
+  textarea.placeholder = "Add a note…";
+  textarea.value = getField(row, "comments");
+
+  textarea.addEventListener("input", debounce(() => {
+    setField(row, "comments", textarea.value);
+    markChanged(row);
+  }, 250));
+
+  td.appendChild(textarea);
+  return td;
+}
+
+
+// ==========================================
+// TRACK CHANGES
+// ==========================================
+function markChanged(row) {
+  const name = getField(row, "cityHead");
+
+  changedRows.set(row.rowNumber, {
+    rowNumber: row.rowNumber,
+    Status: getField(row, "status"),
+    ETA: getField(row, "eta"),
+    "Additional Comments": getField(row, "comments"),
+    "City Head Name": name,
+    "City Head Email": emailForCityHead(name)
+  });
+
+  const tr = document.querySelector(`tr[data-row-number="${row.rowNumber}"]`);
+  if (tr) tr.classList.add("is-dirty");
+
+  updateSaveButton();
+  updateTally();
+}
+
+function updateSaveButton() {
+  const btn = document.getElementById("saveBtn");
+  const count = document.getElementById("changeCount");
+
+  btn.disabled = changedRows.size === 0;
+  count.hidden = changedRows.size === 0;
+  count.textContent = changedRows.size;
+}
+
+
+// ==========================================
+// SAVE
+// ==========================================
+async function saveChanges() {
+  if (changedRows.size === 0) return;
+
+  const payload = Array.from(changedRows.values());
+  const missing = payload.filter(t => t["City Head Name"] && !t["City Head Email"]);
+
+  if (missing.length) {
+    const names = [...new Set(missing.map(t => t["City Head Name"]))].join(", ");
+    const ok = confirm(`No email on file for: ${names}.\n\nSave anyway? No mail will go out to them.`);
+    if (!ok) return;
+  }
+
+  try {
+    showLoading(true, "Saving to the sheet…");
+
+    const formData = new FormData();
+    formData.append("action", "updateTasks");
+    formData.append("tasks", JSON.stringify(payload));
+
+    const response = await fetch(resolveEndpoint(), { method: "POST", body: formData });
+    const result = await response.json();
+
+    if (result.success) {
+      const n = payload.length;
+      changedRows.clear();
+      updateSaveButton();
+      toast(`Saved ${n} row${n === 1 ? "" : "s"}.`, "success");
+      await loadData();
+    } else {
+      toast(result.message || "The sheet rejected the update. Nothing was saved.", "error");
+    }
+  } catch (err) {
+    console.error(err);
+    toast("Couldn't reach the sheet. Your changes are still here — try saving again.", "error");
+  } finally {
+    showLoading(false);
+  }
+}
+
+
+// ==========================================
+// TALLY
+// ==========================================
+function updateTally() {
+  const counts = { Pending: 0, "In Progress": 0, Completed: 0, "On Hold": 0 };
+
+  filteredData.forEach(row => {
+    const status = getField(row, "status") || "Pending";
+    if (status in counts) counts[status] += 1;
+  });
+
+  document.getElementById("tallyOpen").textContent = counts.Pending;
+  document.getElementById("tallyProgress").textContent = counts["In Progress"];
+  document.getElementById("tallyDone").textContent = counts.Completed;
+  document.getElementById("tallyHold").textContent = counts["On Hold"];
+}
+
+
+// ==========================================
+// UI HELPERS
+// ==========================================
+function showLoading(show, message) {
+  const loader = document.getElementById("loading");
+  if (!loader) return;
+  if (message) document.getElementById("loadingText").textContent = message;
+  loader.hidden = !show;
+}
+
+let toastTimer;
+function toast(message, tone = "info") {
+  const el = document.getElementById("toast");
+  document.getElementById("toastText").textContent = message;
+  el.dataset.tone = tone;
+  el.hidden = false;
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, 4200);
+}
+
+function stampLastSynced() {
+  const time = new Date().toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
+  document.getElementById("lastSynced").textContent =
+    `${allData.length} row${allData.length === 1 ? "" : "s"} loaded · last synced ${time}`;
+}
+
+function debounce(fn, wait) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), wait);
+  };
+}
+
+
+// ==========================================
+// DATE FORMAT
+// ==========================================
+function formatDate(value) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+// ==========================================
+// ENDPOINT
+// ==========================================
+function resolveEndpoint() {
+  if (SHEET_API_URL && SHEET_API_URL.trim()) return SHEET_API_URL.trim();
+
+  // still supported, in case a config.js is present
+  if (typeof CONFIG !== "undefined" && CONFIG && CONFIG.API_URL) return CONFIG.API_URL;
+
+  return "";
+}
+
+function showSetupNeeded() {
+  allData = [];
+  filteredData = [];
+  renderTable();
+  updateTally();
+
+  const empty = document.getElementById("emptyState");
+  empty.hidden = false;
+  empty.innerHTML =
+    "This tracker isn't connected to your sheet yet.<br>" +
+    "Open <strong>index.html</strong>, find <strong>SHEET_API_URL</strong> near the top, " +
+    "and paste your Apps Script web app URL between the quotes.";
+
+  document.getElementById("lastSynced").textContent = "Not connected";
+}
+
+</script>
 </body>
-
 </html>
-```
